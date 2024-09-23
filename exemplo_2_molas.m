@@ -3,15 +3,33 @@ clear; clc;               % limpar memória e tela
 % -------------------------------------------------------------
 % Passo 1. Obter matriz de rigidez global K
 % vetor contendo a rigidez de cada mola
-k_n = [10;                % rigidez da mola 1 (N/mm)
-       20];               % rigidez da mola 2 (N/mm)
+k_n = [97;
+141;
+124;
+93;
+87;
+89;
+135;
+106;
+132;
+114;]
+               
 % cálculo do número de linhas do vetor k_n
 e_total = rows(k_n);      % número total de elementos
 % matriz de conectividade (graus de liberdade u_n)
 dof_e = [1 2;   % elemento 1 conecta dof1 (u_1) e dof2 (u_2)
-         2 3];  % elemento 2 conecta dof2 (u_2) e dof3 (u_3)
+         2 3;
+         3 4;
+         4 5;
+         5 6;
+         1 3;
+         2 4;
+         3 5;
+         1 5;
+         4 6;
+         ];  % elemento 2 conecta dof2 (u_2) e dof3 (u_3)
 % criar matriz quadrada nula
-K = zeros(3,3);           % total de dof do problema: 3
+K = zeros(6,6);           % total de dof do problema: 3
 for e = 1:e_total         % loop para cada elemento
   k = k_n(e);             % rigidez do elemento (escalar)
   K_e = k*[1 -1;-1 1];    % matriz de rigidez do elemento
@@ -25,9 +43,12 @@ P = 1e6;                  % fator de penalização
 K(1,1) = K(1,1)*P;        % penalização aplicada no termo 1,1 de K
 % -------------------------------------------------------------
 % Passo 3. Aplicação dos carregamentos
-F = 30;                   % magnitude da força (escalar)
-f = zeros(3,1);           % vetor com 3 linhas e 1 coluna
-f(3) = F;                 % alterar apenas a terceira linha do vetor
+
+f = zeros(6,1); 
+% vetor com 3 linhas e 1 coluna
+f(2) =-36;
+f(5) = 50;
+f(6)= -8;                 % alterar apenas a terceira linha do vetor
 display("vetor de carregamentos:"); f
 % -------------------------------------------------------------
 % Passo 4. Solução do sistema de equações
